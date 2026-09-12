@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Matsudo City FC - 戦績管理</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="bg-light">
+    <!-- 1. 上部ヘッダー（PC・スマホ共通） -->
+    <header class="navbar navbar-dark bg-team shadow-sm sticky-top">
+      <div class="container d-flex justify-content-between align-items-center">
+        <!-- チームロゴ -->
+        <%= link_to root_path, class: "navbar-brand fw-bold d-flex align-items-center m-0" do %>
+          <%= image_tag "MatsudoCitylogo.png", alt: "Matsudo City FC", class: "header-logo" %>
+        <% end %>
+
+        <!-- PC用タブナビゲーション（スマホ時は非表示） -->
+        <nav class="d-none d-md-flex gap-2">
+          <%= link_to matches_path, class: "nav-team-link #{'active' if controller_name == 'matches'}" do %>
+            <i class="bi bi-calendar3 me-1"></i> 試合一覧
+          <% end %>
+          <%= link_to opponents_path, class: "nav-team-link #{'active' if controller_name == 'opponents'}" do %>
+            <i class="bi bi-bar-chart-line-fill me-1"></i> 対戦戦績
+          <% end %>
+          <%= link_to players_path, class: "nav-team-link #{'active' if controller_name == 'players'}" do %>
+            <i class="bi bi-people-fill me-1"></i> メンバー
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 2. 通知メッセージ -->
+    <% if flash[:notice] %>
+      <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= flash[:notice] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+    <% elsif flash[:alert] %>
+      <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= flash[:alert] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- 3. 各画面の中身 -->
+    <main class="container my-4">
+      <%= yield %>
+    </main>
+
+    <!-- 4. スマホ用ボトムナビゲーション（PC時は非表示） -->
+    <nav class="fixed-bottom mobile-bottom-nav d-flex justify-content-around d-md-none shadow">
+      <%= link_to matches_path, class: "mobile-nav-link #{'active' if controller_name == 'matches'}" do %>
+        <i class="bi bi-calendar3"></i>
+        <span>試合</span>
+      <% end %>
+      <%= link_to opponents_path, class: "mobile-nav-link #{'active' if controller_name == 'opponents'}" do %>
+        <i class="bi bi-bar-chart-line-fill"></i>
+        <span>戦績</span>
+      <% end %>
+      <%= link_to players_path, class: "mobile-nav-link #{'active' if controller_name == 'players'}" do %>
+        <i class="bi bi-people-fill"></i>
+        <span>メンバー</span>
+      <% end %>
+    </nav>
+
+    <!-- Bootstrap 5 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

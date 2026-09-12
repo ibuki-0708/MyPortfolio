@@ -1,0 +1,81 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+ /* チームカラー（グリーン） */
+:root {
+  --team-green: #1b5e20;
+  --team-green-dark: #0f3e13;
+}
+.bg-team {
+  background-color: var(--team-green) !important;
+}
+
+/* ヘッダーロゴの調整 */
+.header-logo {
+  height: 32px;           /* ヘッダーの高さに合わせて微調整可（30〜36px程度） */
+  width: auto;
+  object-fit: contain;
+
+  /* 黒文字・濃いマークを真っ白に反転させる設定 */
+  filter: brightness(0) invert(1);
+}
+/* PC用ヘッダーナビ */
+.nav-team-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-team-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.nav-team-link.active {
+  color: #ffffff;
+  background-color: var(--team-green-dark);
+  box-shadow: inset 0 -3px 0 #81c784;
+}
+/* スマホ用ボトムナビ */
+.mobile-bottom-nav {
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+  z-index: 1030;
+}
+.mobile-nav-link {
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 0.75rem;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.mobile-nav-link i {
+  font-size: 1.3rem;
+  margin-bottom: 2px;
+}
+.mobile-nav-link.active {
+  color: var(--team-green);
+  font-weight: bold;
+}
+/* スマホ表示時、固定ナビと被らないよう下部余白を確保 */
+@media (max-width: 767.98px) {
+  body {
+    padding-bottom: 70px;
+  }
+}

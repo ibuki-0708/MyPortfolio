@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  opponent_id: 1
+  match_date: 2026-09-04
+  kickoff_time: 2026-09-04 12:14:53
+  venue: MyString
+  our_first_half: 1
+  our_second_half: 1
+  opp_first_half: 1
+  opp_second_half: 1
+
+two:
+  opponent_id: 1
+  match_date: 2026-09-04
+  kickoff_time: 2026-09-04 12:14:53
+  venue: MyString
+  our_first_half: 1
+  our_second_half: 1
+  opp_first_half: 1
+  opp_second_half: 1
