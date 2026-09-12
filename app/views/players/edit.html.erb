@@ -1,2 +1,60 @@
-<h1>Players#edit</h1>
-<p>Find me in app/views/players/edit.html.erb</p>
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-8">
+    <!-- パンくず・戻る導線 -->
+    <div class="mb-3">
+      <%= link_to players_path, class: "text-decoration-none text-muted small fw-bold" do %>
+        <i class="bi bi-arrow-left me-1"></i>メンバー一覧へ戻る
+      <% end %>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+      <h4 class="fw-bold text-center mb-4 text-dark">メンバー編集</h4>
+
+      <%= form_with(model: @player, local: true) do |f| %>
+        <!-- 名前 -->
+        <div class="mb-3">
+          <%= f.label :name, "名前", class: "form-label fw-bold" %>
+          <%= f.text_field :name, class: "form-control form-control-lg bg-light border-1", required: true %>
+        </div>
+
+        <!-- 背番号 -->
+        <div class="mb-3">
+          <%= f.label :number, "背番号", class: "form-label fw-bold" %>
+          <%= f.number_field :number, class: "form-control form-control-lg bg-light border-1", min: 0, max: 99 %>
+        </div>
+
+        <!-- ポジション -->
+        <div class="mb-3">
+          <%= f.label :position, "ポジション", class: "form-label fw-bold" %>
+          <%= f.select :position, 
+              Player.positions.keys, 
+              { prompt: "ポジションを選択してください" }, 
+              { class: "form-select form-select-lg bg-light border-1" } %>
+        </div>
+
+        <!-- 写真 -->
+        <div class="mb-4">
+          <%= f.label :image, "写真（任意）", class: "form-label fw-bold" %>
+          
+          <!-- 現在設定されている画像のプレビュー -->
+          <% if @player.image.attached? %>
+            <div class="d-flex align-items-center gap-3 mb-2 p-2 rounded bg-light border">
+              <%= image_tag @player.image, class: "rounded object-fit-cover shadow-sm", style: "width: 56px; height: 56px;" %>
+              <div class="small text-muted">
+                現在の登録写真<br>
+                変更する場合は新しい画像を選択してください
+              </div>
+            </div>
+          <% end %>
+
+          <%= f.file_field :image, class: "form-control bg-light", accept: "image/*" %>
+        </div>
+
+        <!-- 更新ボタン -->
+        <div class="text-center mt-4">
+          <%= f.submit "更新する", class: "btn btn-lg w-50 text-white fw-bold shadow-sm", style: "background-color: #51cf66;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

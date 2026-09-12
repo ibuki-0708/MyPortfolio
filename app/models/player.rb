@@ -4,10 +4,18 @@ class Player < ApplicationRecord
   has_many :scores, dependent: :destroy
   has_many :assisted_scores,class_name: "Score",foreign_key: :assist_player_id
 
-  enum :position, {
+  enum position: {
     GK: 0,
     DF: 1,
     MF: 2,
     FW: 3
   }
+
+  def goals_count
+    scores.count
+  end
+
+  def assists_count
+    assisted_scores.count
+  end
 end
