@@ -1,2 +1,106 @@
-<h1>Opponents#show</h1>
-<p>Find me in app/views/opponents/show.html.erb</p>
+<div class="container py-4">
+  <!-- 戻る導線 -->
+  <div class="mb-3">
+    <%= link_to opponents_path, class: "text-decoration-none text-muted small fw-bold" do %>
+      <i class="bi bi-arrow-left me-1"></i>対戦チーム一覧へ戻る
+    <% end %>
+  </div>
+
+  <div class="row g-4">
+    <!-- 左側カラム: チーム情報 & 通算戦績 -->
+    <div class="col-lg-5 col-md-12">
+      <div class="sticky-top" style="top: 80px;">
+        <!-- チームヘッダー -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <% if @opponent.respond_to?(:image) && @opponent.image.attached? %>
+            <%= image_tag @opponent.image, class: "rounded-circle bg-white shadow-sm flex-shrink-0 object-fit-cover", style: "width: 52px; height: 52px; min-width: 52px;" %>
+          <% else %>
+            <div class="rounded-circle bg-white border d-flex align-items-center justify-content-center shadow-sm flex-shrink-0" style="width: 52px; height: 52px; min-width: 52px;">
+              <span class="fs-4">⚽</span>
+            </div>
+          <% end %>
+          <h3 class="fw-bold text-dark mb-0"><%= @opponent.name %></h3>
+        </div>
+
+        <!-- 通算戦績カード -->
+        <div class="card border-0 shadow-sm rounded-3 p-4" style="background-color: #dcdcdc;">
+          <h5 class="fw-bold text-dark mb-4">通算戦績</h5>
+          <div class="d-flex justify-content-between text-center">
+            <span class="fs-5 fw-bold text-dark"><%= @opponent.total_matches_count %>試合</span>
+            <span class="fs-5 fw-bold text-dark"><%= @opponent.wins_count %>勝</span>
+            <span class="fs-5 fw-bold text-dark"><%= @opponent.losses_count %>敗</span>
+            <span class="fs-5 fw-bold text-dark"><%= @opponent.draws_count %>分</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側カラム: 対戦カード一覧 -->
+    <div class="col-lg-7 col-md-12">
+      <div class="d-flex flex-column gap-3">
+        <% if @matches.present? %>
+          <% @matches.each do |match| %>
+            <div class="card border-0 shadow-sm rounded-3" style="background-color: #dcdcdc;">
+              <div class="card-body p-4 position-relative">
+                
+                <!-- 上段: 日付 & 勝敗マーク・スコア -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="fs-5 fw-bold text-dark">
+                    <%= match.match_date&.strftime("%Y/%m/%d") || "日付未定" %>
+                  </div>
+                  <div class="fs-4 fw-bold text-dark d-flex align-items-center gap-2">
+                    <% if match.won? %>
+                      <span class="text-success">○</span>
+                    <% elsif match.lost? %>
+                      <span class="text-dark">●</span>
+                    <% else %>
+                      <span class="text-muted">△</span>
+                    <% end %>
+                    <span><%= match.our_total_score %> - <%= match.opp_total_score %></span>
+                  </div>
+                </div>
+
+                <!-- 中段: 得点者一覧 -->
+                <div class="mb-3">
+                  <div class="small fw-bold text-muted mb-1">得点者</div>
+                  <% if match.scores.present? %>
+                    <div class="d-flex flex-wrap gap-2">
+                      <% match.scores.each do |score| %>
+                        <span class="badge bg-white text-dark border px-2 py-1">
+                          <i class="bi bi-bullseye text-danger me-1"></i><%= score.player&.name || "不明" %>
+                          <% if score.assist_player.present? %>
+                            <span class="text-muted small">（アシスト: <%= score.assist_player.name %>）</span>
+                          <% end %>
+                        </span>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="text-muted small">得点なし</div>
+                  <% end %>
+                </div>
+
+                <!-- 下段: コメント件数 & 詳細ボタン -->
+                <div class="d-flex justify-content-between align-items-end pt-2 border-top border-secondary-subtle">
+                  <div class="text-muted fw-bold">
+                    <i class="bi bi-chat-dots me-1"></i>コメント <%= match.match_comments.count %>件
+                  </div>
+                  <div>
+                    <%= link_to match_path(match), class: "btn btn-info text-white fw-bold px-3 py-1 rounded shadow-sm", style: "background-color: #38a9f5; border: none; font-size: 0.85rem;" do %>
+                      詳細・コメント
+                    <% end %>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="card border-0 bg-white shadow-sm p-5 text-center text-muted rounded-3">
+            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+            このチームとの対戦記録はまだありません。
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,2 +1,147 @@
-<h1>Matches#show</h1>
-<p>Find me in app/views/matches/show.html.erb</p>
+<div class="container py-4">
+  <!-- 戻る導線 -->
+  <div class="mb-3">
+    <%= link_to matches_path, class: "text-decoration-none text-muted small fw-bold" do %>
+      <i class="bi bi-arrow-left me-1"></i>試合一覧へ戻る
+    <% end %>
+  </div>
+
+  <div class="row g-5">
+    <!-- 左側カラム: 試合スコア & 得点者管理 -->
+    <div class="col-lg-6 col-md-12">
+      <!-- 見出し & 日時 -->
+      <h3 class="fw-bold text-dark mb-1">試合詳細</h3>
+      <div class="fs-5 fw-bold text-muted mb-3">
+        <%= @match.match_date&.strftime("%Y/%m/%d") %>
+        <span class="ms-2"><%= @match.kickoff_time&.strftime("%H:%M") %> kick off</span>
+      </div>
+
+      <!-- スコアカード -->
+      <div class="card border-0 shadow-sm rounded-3 p-3 mb-4" style="background-color: #dcdcdc;">
+        <div class="fs-4 fw-bold text-dark text-center mb-2">
+          <span>MCFC</span>
+          <span class="mx-3"><%= @match.our_total_score %> - <%= @match.opp_total_score %></span>
+          <span><%= @match.opponent&.name || "対戦相手" %></span>
+        </div>
+        <div class="text-center text-muted fw-bold mb-2">
+          前半: <%= @match.our_first_half || 0 %>-<%= @match.opp_first_half || 0 %>
+          <span class="mx-2">/</span>
+          後半: <%= @match.our_second_half || 0 %>-<%= @match.opp_second_half || 0 %>
+        </div>
+        <div class="text-end">
+          <%= link_to edit_match_path(@match), class: "btn btn-primary btn-sm px-3 fw-bold rounded" do %>
+            編集
+          <% end %>
+        </div>
+      </div>
+
+      <!-- 得点者一覧 -->
+      <h4 class="fw-bold text-dark mb-3">得点者</h4>
+      <div class="mb-4 ps-2">
+        <% if @match.scores.present? %>
+          <ul class="list-unstyled mb-0">
+            <% @match.scores.each do |score| %>
+              <li class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom border-light-subtle">
+                <span class="fs-5 text-dark">
+                  ・<%= score.player&.name || "不明" %>
+                  <span class="text-muted fs-6">
+                    (アシスト: <%= score.assist_player&.name || "なし" %>)
+                  </span>
+                </span>
+                <%= link_to match_score_path(@match, score), method: :delete, data: { confirm: "この得点記録を削除しますか？" }, class: "text-muted text-decoration-none fs-5 px-2" do %>
+                  ×
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="text-muted small">得点記録はまだありません</div>
+        <% end %>
+      </div>
+
+      <!-- 得点者追加フォーム -->
+      <div class="p-3 rounded-3 bg-light border">
+        <h5 class="fw-bold text-dark mb-3">得点者を追加</h5>
+        <%= form_with(model: [@match, @score], local: true) do |f| %>
+          <div class="row g-2 align-items-center mb-3">
+            <div class="col-auto">
+              <label class="fw-bold text-dark col-form-label">得点者：</label>
+            </div>
+            <div class="col">
+              <%= f.collection_select :player_id, @players, :id, :name, 
+                  { prompt: "選択" }, 
+                  { class: "form-select bg-white", required: true } %>
+            </div>
+
+            <div class="col-auto ms-2">
+              <label class="fw-bold text-dark col-form-label">アシスト：</label>
+            </div>
+            <div class="col">
+              <%= f.collection_select :assist_player_id, @players, :id, :name, 
+                  { prompt: "選択 (任意)" }, 
+                  { class: "form-select bg-white" } %>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <%= f.submit "得点者を記録", class: "btn text-white fw-bold px-4 shadow-sm", style: "background-color: #51cf66;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- 右側カラム: 振り返り（コメント） -->
+    <div class="col-lg-6 col-md-12">
+      <h4 class="fw-bold text-dark mb-3">振り返り <%= @match.match_comments.count %>件</h4>
+
+      <!-- コメント一覧 -->
+      <div class="d-flex flex-column gap-3 mb-4">
+        <% if @match.match_comments.present? %>
+          <% @match.match_comments.each do |comment| %>
+            <div class="card border-0 rounded-3 p-3 position-relative" style="background-color: #dcdcdc;">
+              <div class="small fw-bold text-dark mb-1">
+                <%= comment.player&.name || "メンバー" %>
+              </div>
+              <p class="mb-3 text-dark" style="white-space: pre-wrap;"><%= comment.comment %></p>
+              <div class="text-end">
+                <%= link_to match_match_comment_path(@match, comment), method: :delete, data: { confirm: "このコメントを削除しますか？" }, class: "btn btn-danger btn-sm px-3 fw-bold rounded" do %>
+                  削除
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="card border-0 bg-light p-4 text-center text-muted rounded-3">
+            まだ振り返りコメントがありません。<br>試合の感想や反省点を投稿しましょう！
+          </div>
+        <% end %>
+      </div>
+
+      <!-- 振り返り投稿フォーム -->
+      <div class="p-3 rounded-3 bg-light border">
+        <h5 class="fw-bold text-dark mb-3">振り返り投稿</h5>
+        <%= form_with(model: [@match, @match_comment], local: true) do |f| %>
+          <div class="row align-items-center mb-3">
+            <div class="col-auto">
+              <label class="fw-bold text-dark col-form-label">投稿者：</label>
+            </div>
+            <div class="col-8">
+              <%= f.collection_select :player_id, @players, :id, :name, 
+                  { prompt: "選択" }, 
+                  { class: "form-select bg-white", required: true } %>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :comment, "本文", class: "form-label fw-bold text-dark" %>
+            <%= f.text_area :comment, rows: 3, class: "form-control bg-white", placeholder: "試合の振り返りを入力...", required: true %>
+          </div>
+
+          <div class="text-end">
+            <%= f.submit "投稿", class: "btn text-white fw-bold px-4 shadow-sm", style: "background-color: #51cf66;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

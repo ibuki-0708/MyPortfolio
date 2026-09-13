@@ -1,1 +1,92 @@
-<h1>Matches</h1>
+<div class="container py-4">
+  <div class="row g-4">
+    <!-- 左側カラム: 試合一覧 -->
+    <div class="col-lg-8 col-md-12">
+      <h3 class="fw-bold mb-4 text-dark">試合一覧</h3>
+
+      <div class="d-flex flex-column gap-3">
+        <% if @matches.present? %>
+          <% @matches.each do |match| %>
+            <div class="card border-0 shadow-sm rounded-3" style="background-color: #dcdcdc;">
+              <div class="card-body p-3">
+                <!-- 上段: 日付 & キックオフ時間 -->
+                <div class="d-flex justify-content-between text-muted small fw-bold mb-2 ps-2 pe-2">
+                  <span><%= match.match_date&.strftime("%Y/%m/%d") || "日付未定" %></span>
+                  <span><%= match.kickoff_time&.strftime("%H:%M") %> kick off</span>
+                </div>
+
+                <!-- 中段: 自チーム vs 相手チーム & スコア -->
+                <div class="d-flex align-items-center justify-content-between px-3 py-2 bg-white rounded-3 shadow-sm mb-2">
+                  <!-- 自チーム (MCFC) -->
+                  <div class="d-flex align-items-center gap-2" style="width: 35%;">
+                    <%= image_tag "MatudoCityEmblem.png", alt: "Matsudo City FC", class: "rounded-circle shadow-sm object-fit-cover", style: "width: 42px; height: 42px;" %>
+                    <span class="fw-bold fs-5 text-dark text-truncate">MCFC</span>
+                  </div>
+
+                  <!-- スコア表示 -->
+                  <div class="text-center" style="width: 30%;">
+                    <span class="fs-3 fw-bold text-dark">
+                      <%= match.our_total_score %> - <%= match.opp_total_score %>
+                    </span>
+                    <div class="text-muted" style="font-size: 0.75rem;">
+                      (<%= match.our_first_half || 0 %>-<%= match.opp_first_half || 0 %>, <%= match.our_second_half || 0 %>-<%= match.opp_second_half || 0 %>)
+                    </div>
+                  </div>
+
+                  <!-- 相手チーム -->
+                  <div class="d-flex align-items-center justify-content-end gap-2" style="width: 35%;">
+                    <span class="fw-bold fs-5 text-dark text-truncate"><%= match.opponent&.name || "対戦相手" %></span>
+                    <% if match.opponent.image.attached? %>
+                      <%= image_tag match.opponent.image, alt: match.opponent.name, class: "rounded-circle shadow-sm object-fit-cover", style: "width: 42px; height: 42px;" %>
+                    <% else %>
+                      <!-- 未登録時のプレースホルダー -->
+                      <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px; min-width: 42px;">
+                        <span class="fs-5">⚽</span>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+
+                <!-- 下段: コメント件数 + 詳細/コメントボタン -->
+                <div class="d-flex justify-content-between align-items-center pt-2 ps-2 pe-1 border-top border-secondary-subtle">
+                  <div class="text-muted small fw-bold">
+                    <i class="bi bi-chat-dots me-1"></i>コメント <%= match.match_comments.count %>件
+                  </div>
+                  <div>
+                    <%= link_to match_path(match), class: "btn btn-info text-white fw-bold px-3 py-1 rounded shadow-sm", style: "background-color: #38a9f5; border: none; font-size: 0.85rem;" do %>
+                      詳細・コメント
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="card border-0 bg-white shadow-sm p-5 text-center text-muted rounded-3">
+            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+            まだ記録された試合がありません。<br>
+            右側のボタンから試合結果を記録しましょう！
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- 右側カラム: 今シーズンの戦績 & アクション -->
+    <div class="col-lg-4 col-md-12">
+      <div class="d-flex flex-column gap-3 sticky-top" style="top: 80px;">
+        <!-- 戦績サマリーカード -->
+        <div class="card border-0 shadow-sm rounded-3 text-center p-4" style="background-color: #dcdcdc;">
+          <h5 class="fw-bold text-dark mb-3">今シーズンの戦績</h5>
+          <div class="fs-5 fw-bold text-dark">
+            <%= @matches.count %>試合 <%= @matches.to_a.count(&:won?) %>勝 <%= @matches.to_a.count(&:lost?) %>敗 <%= @matches.to_a.count(&:drawn?) %>分
+          </div>
+        </div>
+
+        <!-- 試合登録ボタン -->
+        <%= link_to new_match_path, class: "btn btn-primary btn-lg fw-bold shadow py-3 rounded-3 d-flex align-items-center justify-content-center", style: "background-color: #38a9f5; border: none;" do %>
+          <i class="bi bi-plus-lg me-2"></i>試合を記録する
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

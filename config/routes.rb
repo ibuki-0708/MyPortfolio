@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
   root 'matches#index'
-  resources :matches, except: [:destroy]
+  resources :matches, except: [:destroy] do
     resources :scores, only: [:create, :destroy]
-    resources :match_comment, only: [:create, :destroy]
+    resources :match_comments, only: [:create, :destroy]
+  end
   
-  resources :opponents, except: [:new]
+  resources :opponents
   resources :players, except: [:show, :destroy]
 
 end
