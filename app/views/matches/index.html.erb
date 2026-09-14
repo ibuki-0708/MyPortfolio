@@ -61,6 +61,12 @@
               </div>
             </div>
           <% end %>
+
+          <!-- ページネーション（中央揃え） -->
+          <div class="d-flex justify-content-center mt-4">
+            <%= paginate @matches %>
+          </div>
+
         <% else %>
           <div class="card border-0 bg-white shadow-sm p-5 text-center text-muted rounded-3">
             <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
@@ -78,7 +84,7 @@
         <div class="card border-0 shadow-sm rounded-3 text-center p-4" style="background-color: #dcdcdc;">
           <h5 class="fw-bold text-dark mb-3">今シーズンの戦績</h5>
           <div class="fs-5 fw-bold text-dark">
-            <%= @matches.count %>試合 <%= @matches.to_a.count(&:won?) %>勝 <%= @matches.to_a.count(&:lost?) %>敗 <%= @matches.to_a.count(&:drawn?) %>分
+            <%= @all_matches.count %>試合 <%= @all_matches.to_a.count(&:won?) %>勝 <%= @all_matches.to_a.count(&:lost?) %>敗 <%= @all_matches.to_a.count(&:drawn?) %>分
           </div>
         </div>
 

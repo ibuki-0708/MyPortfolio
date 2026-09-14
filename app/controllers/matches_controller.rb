@@ -1,6 +1,12 @@
 class MatchesController < ApplicationController
   def index
-    @matches = Match.includes(:opponent, :match_comments).order(match_date: :desc)
+    # 今シーズンの戦績計算用（ページをめくっても全試合分を対象にする）
+    @all_matches = Match.all
+
+    # ページネーション用（最新の試合順で5件ずつ取得）
+    @matches = Match.order(match_date: :desc, kickoff_time: :desc)
+                    .page(params[:page])
+                    .per(5)
   end
 
   def show

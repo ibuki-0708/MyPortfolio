@@ -1,6 +1,8 @@
 class OpponentsController < ApplicationController
   def index
-    @opponents = Opponent.includes(:matches).all
+    @opponents = Opponent.order(:name)
+                         .page(params[:page])
+                         .per(6)
   end
 
   def new
