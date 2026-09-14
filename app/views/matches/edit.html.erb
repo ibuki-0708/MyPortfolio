@@ -1,2 +1,101 @@
-<h1>Matches#edit</h1>
-<p>Find me in app/views/matches/edit.html.erb</p>
+<div class="container py-4">
+  <!-- 戻る導線 -->
+  <div class="mb-3">
+    <%= link_to match_path(@match), class: "text-decoration-none text-muted small fw-bold" do %>
+      <i class="bi bi-arrow-left me-1"></i>試合詳細へ戻る
+    <% end %>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3 p-4 p-md-5 bg-white">
+    <h3 class="fw-bold text-dark mb-4">試合編集</h3>
+
+    <%= form_with(model: @match, local: true) do |f| %>
+      <div class="row g-4 g-lg-5">
+        
+        <!-- 左側カラム: 試合の基本情報 -->
+        <div class="col-lg-5 col-md-6">
+          <!-- 試合日 -->
+          <div class="mb-4">
+            <%= f.label :match_date, "試合日", class: "form-label fw-bold text-dark fs-5 mb-2" %>
+            <%= f.date_field :match_date, class: "form-control bg-light border-1", style: "max-width: 280px;", required: true %>
+          </div>
+
+          <!-- kick off時間 -->
+          <div class="mb-4">
+            <%= f.label :kickoff_time, "kick off時間", class: "form-label fw-bold text-dark fs-5 mb-2" %>
+            <%= f.time_field :kickoff_time, class: "form-control bg-light border-1", style: "max-width: 280px;" %>
+          </div>
+
+          <!-- 対戦相手 -->
+          <div class="mb-3">
+            <%= f.label :opponent_id, "対戦相手", class: "form-label fw-bold text-dark fs-5 mb-2" %>
+            <%= f.collection_select :opponent_id, @opponents, :id, :name, 
+                { prompt: "選択してください" }, 
+                { class: "form-select bg-light border-1 mb-2", style: "max-width: 280px;", required: true } %>
+            
+            <div>
+              <%= link_to new_opponent_path, class: "btn btn-outline-secondary btn-sm fw-bold border-1 bg-white text-dark shadow-sm px-3" do %>
+                + 新規チームを追加
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側カラム: スコア入力 -->
+        <div class="col-lg-7 col-md-6">
+          <div class="p-3 p-md-4 rounded-3 border bg-light">
+            <h5 class="fw-bold text-dark text-center mb-4">スコア入力</h5>
+
+            <!-- チーム名ヘッダー -->
+            <div class="row text-center fw-bold text-dark fs-5 mb-3">
+              <div class="col-6">MCFC</div>
+              <div class="col-6">相手チーム</div>
+            </div>
+
+            <!-- 前半スコア -->
+            <div class="row align-items-center mb-3">
+              <!-- MCFC 前半 -->
+              <div class="col-6">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <span class="fw-bold text-dark text-nowrap">前半：</span>
+                  <%= f.number_field :our_first_half, min: 0, class: "form-control text-center bg-white border-1", style: "width: 70px;" %>
+                </div>
+              </div>
+              <!-- 相手チーム 前半 -->
+              <div class="col-6">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <span class="fw-bold text-dark text-nowrap">前半：</span>
+                  <%= f.number_field :opp_first_half, min: 0, class: "form-control text-center bg-white border-1", style: "width: 70px;" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- 後半スコア -->
+            <div class="row align-items-center mb-4">
+              <!-- MCFC 後半 -->
+              <div class="col-6">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <span class="fw-bold text-dark text-nowrap">後半：</span>
+                  <%= f.number_field :our_second_half, min: 0, class: "form-control text-center bg-white border-1", style: "width: 70px;" %>
+                </div>
+              </div>
+              <!-- 相手チーム 後半 -->
+              <div class="col-6">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <span class="fw-bold text-dark text-nowrap">後半：</span>
+                  <%= f.number_field :opp_second_half, min: 0, class: "form-control text-center bg-white border-1", style: "width: 70px;" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- 保存ボタン -->
+            <div class="text-end mt-4">
+              <%= f.submit "保存", class: "btn text-white fw-bold px-4 py-2 shadow-sm rounded", style: "background-color: #51cf66;" %>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    <% end %>
+  </div>
+</div>

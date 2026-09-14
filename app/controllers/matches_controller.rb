@@ -25,9 +25,17 @@ class MatchesController < ApplicationController
   end
 
   def edit
+    @match = Match.find(params[:id])
+    @opponents = Opponent.all
   end
 
   def update
+    @match = Match.find(params[:id])
+    if @match.update(match_params)
+      redirect_to match_path(@match), notice: "試合結果を更新しました！"
+    else
+      render :edit
+    end
   end
 
   private
