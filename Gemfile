@@ -58,3 +58,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'kaminari','~> 1.2.1'
 gem 'mysql2', '>= 0.4.4', '< 0.6.0' , group: :production
 gem 'logger'
+gem 'concurrent-ruby', '1.3.4'
