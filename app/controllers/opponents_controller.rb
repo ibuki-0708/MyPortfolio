@@ -38,6 +38,8 @@ class OpponentsController < ApplicationController
     @matches = @opponent.matches.order(match_date: :desc)
   end
 
+  
+
   private
 
   def opponent_params

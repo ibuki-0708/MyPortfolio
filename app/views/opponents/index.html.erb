@@ -28,6 +28,7 @@
               <div class="flex-shrink-0 ms-2">
                 <%= link_to "編集", edit_opponent_path(opponent), class: "btn btn-primary btn-sm px-3 fw-bold rounded shadow-sm" %>
               </div>
+    
             </div>
 
             <!-- 中段: 通算戦績 (○試合 ○勝 ○敗 ○分) -->
@@ -77,9 +78,9 @@
 
       <!-- ページネーション（中央揃え） -->
       <div class="d-flex justify-content-center mt-3">
-        <%= paginate @opponents, theme: 'bootstrap-5' %>
+        <%= paginate @opponents%>
       </div>
-      
+
     <% else %>
       <div class="card border-0 bg-white shadow-sm p-4 text-center text-muted rounded-3">
         対戦相手チームがまだ登録されていません。<br>
